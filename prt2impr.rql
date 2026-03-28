@@ -1,0 +1,5 @@
+from foo
+match
+?s ?p ?o
+construct
+?s ?p ?o, ?s <http://example.org/ont/seenInTest> "yes"

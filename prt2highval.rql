@@ -1,0 +1,7 @@
+from qux
+match
+?s ?p ?o
+where
+(?p = <http://example.org/ont/studiesAt> or ?p = <http://example.org/ont/worksFor>) and not (?o = <http://example.org/other>)
+construct
+?s ?p ?o

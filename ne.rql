@@ -1,0 +1,7 @@
+from qux
+match
+?s ?p ?o
+where
+?o != <http://example.org/uos>
+construct
+?s ?p ?o

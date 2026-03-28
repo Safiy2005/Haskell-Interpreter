@@ -1,54 +1,138 @@
 {
-module Parser where
+module Parser
+  ( parseProgram
+  ) where
+
 import Lexer
 import Syntax
 }
 
-%name parseRQL
+%name parseQuery
 %tokentype { Token }
 %error { parseError }
 
 %token
-    load    { TokenLoad }
-    select  { TokenSelect }
-    where   { TokenWhere }
-    prefix  { TokenPrefixDecl }
-    uri     { TokenURI $$ }
-    str     { TokenStr $$ }
-    int     { TokenInt $$ }
-    var     { TokenVar $$ }
-    '.'     { TokenDot }
-    '{'     { TokenLBrace }
-    '}'     { TokenRBrace }
+  from       { TokFrom }
+  match      { TokMatch }
+  where      { TokWhere }
+  construct  { TokConstruct }
+  group      { TokGroup }
+  by         { TokBy }
+  aggregate  { TokAggregate }
+  max        { TokMax }
+  and        { TokAnd }
+  or         { TokOr }
+  not        { TokNot }
+  count      { TokCount}
+  ','        { TokComma }
+  '='        { TokEq }
+  ne         { TokNe }
+  ge         { TokGe }
+  gt         { TokGt }
+  lt         { TokLt }
+  '('        { TokLParen }
+  ')'        { TokRParen }
+  var        { TokVar $$ }
+  name       { TokName $$ }
+  uri        { TokURI $$ }
+  str        { TokString $$ }
+  int        { TokInt $$ }
+
+%right or
+%right and
+%right not
 
 %%
 
--- A program is a list of commands
-Program : Commands { reverse $1 }
+Query :: { Query }
+Query
+  : from SourceList match PatternList MaybeWhere MaybeGroup MaybeAggregate construct TemplateList
+      { Query $2 $4 $5 $6 $7 $9 }
 
-Commands : Commands Command { $2 : $1 }
-         | Command          { [$1] }
+SourceList :: { [String] }
+SourceList
+  : name                     { [$1] }
+  | SourceList ',' name      { $1 ++ [$3] }
 
-Command : load str '.'                     { Load $2 }
-        | prefix var uri '.'               { Prefix $2 $3 }
-        | select VarList where '{' TripleList '}' '.' { Select $2 $5 }
+PatternList :: { [Pattern] }
+PatternList
+  : Pattern                  { [$1] }
+  | PatternList ',' Pattern  { $1 ++ [$3] }
 
--- List of variables: ?a ?b ?c
-VarList : var VarList { $1 : $2 }
-        | var         { [$1] }
+Pattern :: { Pattern }
+Pattern
+  : Term Term Term           { Pattern $1 $2 $3 }
 
--- List of triples: ?s ?p ?o . ?s2 ?p2 ?o2 .
-TripleList : TriplePattern '.' TripleList { $1 : $3 }
-           | TriplePattern '.'            { [$1] }
+MaybeWhere :: { Maybe BoolExpr }
+MaybeWhere
+  :                          { Nothing }
+  | where BoolExpr           { Just $2 }
 
-TriplePattern : Term Term Term { TriplePattern $1 $2 $3 }
+MaybeGroup :: { [Var] }
+MaybeGroup
+  :                          { [] }
+  | group by VarList         { $3 }
 
-Term : var { Var $1 }
-     | uri { URI $1 }
-     | str { LitString $1 }
-     | int { LitInt $1 }
+MaybeAggregate :: { [AggBind] }
+MaybeAggregate
+  :                          { [] }
+  | aggregate AggList        { $2 }
+
+VarList :: { [Var] }
+VarList
+  : var                      { [Var $1] }
+  | VarList ',' var          { $1 ++ [Var $3] }
+
+AggList :: { [AggBind] }
+AggList
+  : AggBind                  { [$1] }
+  | AggList ',' AggBind      { $1 ++ [$3] }
+
+AggBind :: { AggBind }
+AggBind
+  : var '=' max   '(' Expr ')' { AggBind (Var $1) AggMax   $5 }
+  | var '=' count '(' Expr ')' { AggBind (Var $1) AggCount $5 }
+
+TemplateList :: { [TripleTemplate] }
+TemplateList
+  : Template                 { [$1] }
+  | TemplateList ',' Template { $1 ++ [$3] }
+
+Template :: { TripleTemplate }
+Template
+  : Term Term Term           { TripleTemplate $1 $2 $3 }
+
+Term :: { Term }
+Term
+  : var                      { TVar (Var $1) }
+  | uri                      { TNode (URI $1) }
+  | str                      { TNode (LitStr $1) }
+  | int                      { TNode (LitInt $1) }
+
+Expr :: { Expr }
+Expr
+  : var                      { EVar (Var $1) }
+  | uri                      { ENode (URI $1) }
+  | str                      { ENode (LitStr $1) }
+  | int                      { ENode (LitInt $1) }
+
+BoolExpr :: { BoolExpr }
+BoolExpr
+  : Expr '=' Expr            { BEq $1 $3 }
+  | Expr ne Expr             { BNe $1 $3 }
+  | Expr ge Expr             { BGe $1 $3 }
+  | Expr gt Expr             { BGt $1 $3 }
+  | Expr lt Expr             { BLt $1 $3 }
+  | BoolExpr and BoolExpr    { BAnd $1 $3 }
+  | BoolExpr or BoolExpr     { BOr $1 $3 }
+  | not BoolExpr             { BNot $2 }
+  | '(' BoolExpr ')'         { $2 }
 
 {
 parseError :: [Token] -> a
-parseError tokens = error $ "Parse error at tokens: " ++ show tokens
+parseError [] = error "Parse error at end of input"
+parseError ts = error ("Parse error near tokens: " ++ show (take 3 ts))
+
+parseProgram :: String -> Query
+parseProgram = parseQuery . alexScanTokens
 }

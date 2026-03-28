@@ -1,0 +1,8 @@
+from counttest
+match
+?x <http://example.org/ont/teaches> ?c
+group by ?x
+aggregate
+?n = count(?c)
+construct
+?x <http://example.org/ont/courseCount> ?n

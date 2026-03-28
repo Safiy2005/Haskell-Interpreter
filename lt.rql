@@ -1,0 +1,7 @@
+from baz
+match
+?s <http://example.org/ont/hasAge> ?age
+where
+?age < 21
+construct
+?s <http://example.org/ont/hasAge> ?age

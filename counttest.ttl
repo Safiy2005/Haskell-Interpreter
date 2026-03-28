@@ -1,0 +1,6 @@
+@base <http://example.org/> .
+@prefix ont: <http://example.org/ont/> .
+
+<a> ont:teaches <c1> .
+<a> ont:teaches <c2> .
+<b> ont:teaches <c3> .
