@@ -9,9 +9,9 @@ newtype Var = Var String
   deriving (Eq, Ord, Show)
 
 data Node
-  = URI String
-  | LitStr String
+  = LitStr String
   | LitInt Int
+  | URI String
   deriving (Eq, Ord, Show)
 
 data Triple = Triple Node Node Node
