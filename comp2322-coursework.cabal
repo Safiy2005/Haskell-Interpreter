@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -38,9 +38,9 @@ library
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
-  build-tools:
-      alex
-    , happy
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
       array
     , base >=4.7 && <5
@@ -63,9 +63,9 @@ executable comp2322-coursework-exe
       app
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
-  build-tools:
-      alex
-    , happy
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
       array
     , base >=4.7 && <5
@@ -83,9 +83,9 @@ test-suite comp2322-coursework-test
   hs-source-dirs:
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
-  build-tools:
-      alex
-    , happy
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
       array
     , base >=4.7 && <5

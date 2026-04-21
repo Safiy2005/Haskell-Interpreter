@@ -85,11 +85,13 @@ applyAggs aggs grp@(base:_) = foldl (addAgg grp) base aggs
   where
     addAgg grp' acc (AggBind v AggMax e) =
       let vals = [i | b <- grp', Just (LitInt i) <- [evalExpr b e]]
-      in M.insert v (LitInt (maximum vals)) acc
+      in if null vals
+       then acc
+       else M.insert v (LitInt (maximum vals)) acc
 
     addAgg grp' acc (AggBind v AggCount e) =
-      let vals = [() | b <- grp', Just _ <- [evalExpr b e]]
-      in M.insert v (LitInt (length vals)) acc
+      let count = length [() | b <- grp', Just _ <- [evalExpr b e]]
+      in M.insert v (LitInt count) acc
 
 groupByVars :: [Var] -> [Binding] -> [[Binding]]
 groupByVars [] bs = map (:[]) bs

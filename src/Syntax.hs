@@ -57,6 +57,6 @@ data Query = Query
   , qGroupBy   :: [Var]
   , qAggs      :: [AggBind]
   , qConstruct :: [TripleTemplate]
-  } deriving (Eq, Show)
+  } deriving (Eq, Ord, Show)
 
 type Binding = M.Map Var Node
