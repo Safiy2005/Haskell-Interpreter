@@ -1,0 +1,5 @@
+from foo, bar
+match
+?s ?p ?o
+construct
+?s ?p ?o

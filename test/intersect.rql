@@ -1,0 +1,6 @@
+from foo as f, bar as g
+match
+f: ?s ?p ?o,
+g: ?s ?p ?o
+construct
+?s ?p ?o

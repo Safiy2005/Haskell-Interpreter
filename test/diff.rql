@@ -1,0 +1,7 @@
+from foo as f, bar as g
+match
+f: ?s ?p ?o
+where
+not exists g: ?s ?p ?o
+construct
+?s ?p ?o

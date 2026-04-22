@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.37.0.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -25,7 +25,12 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Eval
+      Lexer
+      Parser
+      Render
+      Syntax
+      Turtle
   other-modules:
       Paths_comp2322_coursework
   autogen-modules:
@@ -33,22 +38,39 @@ library
   hs-source-dirs:
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable comp2322-coursework-exe
   main-is: Main.hs
   other-modules:
+      Eval
+      Lexer
+      Parser
+      Render
+      Syntax
+      Turtle
       Paths_comp2322_coursework
   autogen-modules:
       Paths_comp2322_coursework
   hs-source-dirs:
       app
+      src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , comp2322-coursework
+    , containers
   default-language: Haskell2010
 
 test-suite comp2322-coursework-test
@@ -61,7 +83,12 @@ test-suite comp2322-coursework-test
   hs-source-dirs:
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      alex:alex
+    , happy:happy
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , comp2322-coursework
+    , containers
   default-language: Haskell2010

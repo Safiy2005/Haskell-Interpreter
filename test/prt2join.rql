@@ -1,0 +1,7 @@
+from xyzzy, plugh
+match
+?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?y,
+?y <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?z,
+?z <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?w
+construct
+?x <http://example.org/ont/derivedType> ?w

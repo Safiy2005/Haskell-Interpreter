@@ -1,0 +1,9 @@
+@base <http://example.org/> .
+@prefix ont: <http://example.org/ont/> .
+
+<a> ont:price 10 .
+<a> ont:price 25 .
+<a> ont:price 7 .
+<b> ont:price 12 .
+<b> ont:price 5 .
+<c> ont:name "NoPrice" .
