@@ -2,7 +2,7 @@
 
 {-# LANGUAGE LambdaCase #-}
 module Turtle
-  ( loadTurtleGraph
+  ( loadTurtleGr
   ) where
 
 import Data.Char (isDigit, isSpace)
@@ -15,8 +15,8 @@ data PState = PState
   , stPrefix :: M.Map String String
   }
 
-loadTurtleGraph :: FilePath -> IO [Triple]
-loadTurtleGraph fp = do
+loadTurtleGr :: FilePath -> IO [Triple]
+loadTurtleGr fp = do
   src <- readFile fp
   case parseTurtle src of
     Left err -> error err
@@ -29,7 +29,7 @@ parseTurtle src = do
   st <- foldl parseDecl (Right (PState Nothing M.empty)) decls
   let tripleText = unlines rest
   let statements = splitTopLevel '.' tripleText
-  triples <- fmap concat (mapM (parseTripleStatement st) (filter (not . null) (map trim statements)))
+  triples <- fmap concat (mapM (parseTripleStat st) (filter (not . null) (map trim statements)))
   pure triples
 
 isDecl :: String -> Bool
@@ -39,23 +39,23 @@ parseDecl :: Either String PState -> String -> Either String PState
 parseDecl accE line = do
   acc <- accE
   case words line of
-    ["@base", uri, "."] -> Right acc { stBase = Just (stripAngles uri) }
+    ["@base", uri, "."] -> Right acc { stBase = Just (stripAng uri) }
     ["@prefix", pfxColon, uri, "."] ->
       let pfx = reverse (drop 1 (reverse pfxColon))
-      in Right acc { stPrefix = M.insert pfx (stripAngles uri) (stPrefix acc) }
+      in Right acc { stPrefix = M.insert pfx (stripAng uri) (stPrefix acc) }
     _ -> Left ("Bad declaration: " ++ line)
 
-parseTripleStatement :: PState -> String -> Either String [Triple]
-parseTripleStatement st line = do
+parseTripleStat :: PState -> String -> Either String [Triple]
+parseTripleStat st line = do
   let body = trim line
   case parseSubject body of
     Nothing -> Left ("Bad triple line: " ++ line)
     Just (subjTxt, rest1) -> do
       subj <- parseUriLike st subjTxt
-      parsePredGroups st subj rest1
+      parsePredGrs st subj rest1
 
-parsePredGroups :: PState -> Node -> String -> Either String [Triple]
-parsePredGroups st subj s = do
+parsePredGrs :: PState -> Node -> String -> Either String [Triple]
+parsePredGrs st subj s = do
   let groups = splitTopLevel ';' s
   fmap concat $ mapM (parsePredGroup st subj) groups
 
@@ -79,7 +79,7 @@ parseObj st s
 
 parseUriLike :: PState -> String -> Either String Node
 parseUriLike st s
-  | not (null s) && head s == '<' && last s == '>' = Right . URI $ expandAngle (stBase st) (init (tail s))
+  | not (null s) && head s == '<' && last s == '>' = Right . URI $ expAngle (stBase st) (init (tail s))
   | ':' `elem` s =
       let (pfx, _:local) = break (== ':') s
       in case M.lookup pfx (stPrefix st) of
@@ -87,11 +87,11 @@ parseUriLike st s
            Nothing   -> Left ("Unknown prefix: " ++ pfx)
   | otherwise = Left ("Bad URI-like token: " ++ s)
 
-expandAngle :: Maybe String -> String -> String
-expandAngle _ u | "http://" `L.isPrefixOf` u = u
-expandAngle _ u | "https://" `L.isPrefixOf` u = u
-expandAngle (Just b) u = b ++ u
-expandAngle Nothing u = u
+expAngle :: Maybe String -> String -> String
+expAngle _ u | "http://" `L.isPrefixOf` u = u
+expAngle _ u | "https://" `L.isPrefixOf` u = u
+expAngle (Just b) u = b ++ u
+expAngle Nothing u = u
 
 parseSubject :: String -> Maybe (String, String)
 parseSubject s = case nextToken s of
@@ -126,8 +126,8 @@ splitTopLevel sep = go False False ""
 trim :: String -> String
 trim = dropWhileEnd isSpace . dropWhile isSpace
 
-stripAngles :: String -> String
-stripAngles = init . tail
+stripAng :: String -> String
+stripAng = init . tail
 
 dropWhileEnd :: (Char -> Bool) -> String -> String
 dropWhileEnd f = reverse . dropWhile f . reverse

@@ -20,6 +20,7 @@ import Syntax
   by         { TokBy }
   aggregate  { TokAggregate }
   max        { TokMax }
+  min        { TokMin }
   and        { TokAnd }
   or         { TokOr }
   not        { TokNot }
@@ -37,6 +38,10 @@ import Syntax
   uri        { TokURI $$ }
   str        { TokString $$ }
   int        { TokInt $$ }
+  as         { TokAs }
+  exists     { TokExists }
+  ':'        { TokColon }
+
 
 %right or
 %right and
@@ -49,10 +54,15 @@ Query
   : from SourceList match PatternList MaybeWhere MaybeGroup MaybeAggregate construct TemplateList
       { Query $2 $4 $5 $6 $7 $9 }
 
-SourceList :: { [String] }
+SourceList :: { [SrcSpec] }
 SourceList
-  : name                     { [$1] }
-  | SourceList ',' name      { $1 ++ [$3] }
+  : SrcSpec                     { [$1] }
+  | SourceList ',' SrcSpec      { $1 ++ [$3] }
+
+SrcSpec :: {SrcSpec}
+SrcSpec
+  : name as name                { SrcSpec $1 (SrcAlias $3) }
+  | name                        { SrcSpec $1 (SrcAlias $1) }
 
 PatternList :: { [Pattern] }
 PatternList
@@ -61,7 +71,8 @@ PatternList
 
 Pattern :: { Pattern }
 Pattern
-  : Term Term Term           { Pattern $1 $2 $3 }
+  : Term Term Term           { Pattern Nothing $1 $2 $3 }
+  | name ':' Term Term Term  { Pattern (Just (SrcAlias $1)) $3 $4 $5}
 
 MaybeWhere :: { Maybe BoolExpr }
 MaybeWhere
@@ -91,6 +102,7 @@ AggList
 AggBind :: { AggBind }
 AggBind
   : var '=' max   '(' Expr ')' { AggBind (Var $1) AggMax   $5 }
+  | var '=' min   '(' Expr ')' { AggBind (Var $1) AggMin   $5 }
   | var '=' count '(' Expr ')' { AggBind (Var $1) AggCount $5 }
 
 TemplateList :: { [TripleTemplate] }
@@ -127,6 +139,8 @@ BoolExpr
   | BoolExpr or BoolExpr     { BOr $1 $3 }
   | not BoolExpr             { BNot $2 }
   | '(' BoolExpr ')'         { $2 }
+  | exists name ':' Term Term Term
+                             { BExists (SrcAlias $2) (Pattern (Just (SrcAlias $2)) $4 $5 $6)}
 
 {
 parseError :: [Token] -> a

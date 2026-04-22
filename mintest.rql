@@ -1,0 +1,8 @@
+from mintest
+match
+?x <http://example.org/ont/price> ?p
+group by ?x
+aggregate
+?m = min(?p)
+construct
+?x <http://example.org/ont/price> ?m

@@ -25,10 +25,10 @@ renderTriple (Triple s p o) =
 tripleKey :: Triple -> (String, String, String)
 tripleKey (Triple s p o) = (renderNode s, renderNode p, renderNode o)
 
-canonicalise :: [Triple] -> [Triple]
-canonicalise = map head . groupBy same . sortOn tripleKey
+canon :: [Triple] -> [Triple]
+canon = map head . groupBy same . sortOn tripleKey
   where
     same x y = tripleKey x == tripleKey y
 
 renderGraph :: [Triple] -> String
-renderGraph = unlines . map renderTriple . canonicalise
+renderGraph = unlines . map renderTriple . canon

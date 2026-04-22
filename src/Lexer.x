@@ -30,7 +30,10 @@ tokens :-
   or                                { \_ -> TokOr }
   not                               { \_ -> TokNot }
   count                             { \_ -> TokCount}
-
+  min                               { \_ -> TokMin}
+  as                                { \_ -> TokAs}
+  exists                            { \_ -> TokExists}
+  
   "!="                              { \_ -> TokNe }
   ">="                              { \_ -> TokGe }
   ">"                               { \_ -> TokGt }
@@ -39,6 +42,7 @@ tokens :-
   "="                               { \_ -> TokEq }
   "("                               { \_ -> TokLParen }
   ")"                               { \_ -> TokRParen }
+  ":"                               { \_ -> TokColon}
   
 
   @var                              { \s -> TokVar (tail s) }
@@ -57,6 +61,7 @@ data Token
   | TokBy
   | TokAggregate
   | TokMax
+  | TokMin
   | TokAnd
   | TokOr
   | TokNot
@@ -74,5 +79,8 @@ data Token
   | TokURI String
   | TokString String
   | TokInt Int
+  | TokAs
+  | TokExists
+  | TokColon
   deriving (Eq, Show)
 }

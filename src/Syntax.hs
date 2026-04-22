@@ -8,6 +8,14 @@ import qualified Data.Map.Strict as M
 newtype Var = Var String
   deriving (Eq, Ord, Show)
 
+newtype SrcAlias = SrcAlias String
+  deriving (Eq, Ord, Show)
+
+data SrcSpec = SrcSpec
+  { srcFile  :: String
+  , srcAlias :: SrcAlias
+  } deriving (Eq, Ord, Show)
+
 data Node
   = LitStr String
   | LitInt Int
@@ -22,8 +30,12 @@ data Term
   | TNode Node
   deriving (Eq, Ord, Show)
 
-data Pattern = Pattern Term Term Term
-  deriving (Eq, Ord, Show)
+data Pattern = Pattern
+  { patSource :: Maybe SrcAlias
+  , patSubj :: Term
+  , patPred :: Term
+  , patObj  :: Term
+  } deriving (Eq, Ord, Show)
 
 data Expr
   = EVar Var
@@ -39,9 +51,10 @@ data BoolExpr
   | BAnd BoolExpr BoolExpr
   | BOr BoolExpr BoolExpr
   | BNot BoolExpr
+  | BExists SrcAlias Pattern
   deriving (Eq, Ord, Show)
 
-data AggOp = AggMax | AggCount
+data AggOp = AggMax | AggMin | AggCount
   deriving (Eq, Ord, Show)
 
 data AggBind = AggBind Var AggOp Expr
@@ -51,7 +64,7 @@ data TripleTemplate = TripleTemplate Term Term Term
   deriving (Eq, Ord, Show)
 
 data Query = Query
-  { qSources   :: [String]
+  { qSources   :: [SrcSpec]
   , qPatterns  :: [Pattern]
   , qFilter    :: Maybe BoolExpr
   , qGroupBy   :: [Var]
