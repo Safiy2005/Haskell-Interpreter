@@ -2,9 +2,9 @@ name:                comp2322-coursework
 version:             0.1.0.0
 github:              "githubuser/comp2322-coursework"
 license:             BSD-3-Clause
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2026 Author name here"
+author:              "jb5g24, sh6n24, ssa1g24"
+maintainer:          "jb5g24, sh6n24, ssa1g24"
+copyright:           "University of Southampton 2026"
 
 extra-source-files:
 - README.md
