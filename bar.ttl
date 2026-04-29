@@ -1,5 +1,6 @@
 @base <http://example.org/> .
-@prefix ont: <http://example.org/ont/> .
+@prefix ont: <http://ont.example.org/> .
 
-<a> ont:worksFor <uos> .
-<b> ont:name "Bob" .
+<barOnly> ont:label "Unique to Bar" .
+
+<common> ont:status "Shared" .

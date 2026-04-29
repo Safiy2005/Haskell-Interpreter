@@ -1,0 +1,4 @@
+from foo, bar, baz
+match ?s ?p ?o
+where (exists foo:?s ?p ?o or exists bar:?s ?p ?o) and not exists baz:?s ?p ?o
+construct ?s ?p ?o

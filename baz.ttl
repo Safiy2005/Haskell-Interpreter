@@ -1,7 +1,4 @@
 @base <http://example.org/> .
-@prefix ont: <http://example.org/ont/> .
+@prefix ont: <http://ont.example.org/> .
 
-<a> ont:hasAge 20 .
-<b> ont:hasAge 21 .
-<c> ont:hasAge 30 .
-<d> ont:name "Dave" .
+<common> ont:status "Shared" .

@@ -1,5 +1,12 @@
 @base <http://example.org/> .
 @prefix ont: <http://example.org/ont/> .
 
-<a> ont:name "Alice" .
-<a> ont:worksFor <uos> .
+<jane> <http://example.org/ont/worksFor> <uos> .
+
+<user1> ont:name "Alice" .
+
+<user2> <http://example.org/ont/status> "Sally" .
+
+<jane> ont:likes "Fred" .
+
+<jane> ont:name "Fred" .

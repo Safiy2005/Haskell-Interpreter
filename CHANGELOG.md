@@ -1,6 +1,6 @@
 # Changelog for `comp2322-coursework`
 
-## 1.0.0 - 2026-04-22
+## 1.0.0 - 2026-04-23
 Final submittable version, fixes (jb5g24)
 
 ## 0.3.0 - 2026-04-22
