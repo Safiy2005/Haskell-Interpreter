@@ -1,10 +1,10 @@
 from foo
 match ?s ?p ?o
 where (
-  ( ?s = <http://example.org/jane> and ?p != <http://example.org/ont/name> and not (?o = "Fred" or ?o = "Sally") )
+  ( ?s = <http://example.org/jane> and ?p != <http://example.org/ont/hasName> and not (?o = "Fred" or ?o = "Sally") )
   or
-  ( ?s != <http://example.org/jane> and ?p = <http://example.org/ont/name> and not (?o = "Fred" or ?o = "Sally") )
+  ( ?s != <http://example.org/jane> and ?p = <http://example.org/ont/hasName> and not (?o = "Fred" or ?o = "Sally") )
   or
-  ( ?s != <http://example.org/jane> and ?p != <http://example.org/ont/name> and (?o = "Fred" or ?o = "Sally") )
+  ( ?s != <http://example.org/jane> and ?p != <http://example.org/ont/hasName> and (?o = "Fred" or ?o = "Sally") )
 )
 construct ?s ?p ?o
