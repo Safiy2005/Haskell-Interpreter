@@ -1,0 +1,6 @@
+from foo9 as f
+match
+f: ?x <http://www.w3.org/2002/07/owl#sameAs> ?y,
+f: ?z <http://www.w3.org/2002/07/owl#sameAs> ?y
+construct
+?x <http://www.w3.org/2002/07/owl#sameAs> ?z

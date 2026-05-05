@@ -1,0 +1,7 @@
+from foo as f
+match
+f: ?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>
+where
+not exists f: ?x <http://xmlns.com/foaf/0.1/knows> <http://example.org/nmg>
+construct
+?x <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person>

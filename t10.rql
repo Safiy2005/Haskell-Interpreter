@@ -1,0 +1,7 @@
+from foo
+match
+?x ?p ?y
+where
+?p = <http://purl.org/dc/elements/1.0/creator> or ?p = <http://purl.org/dc/elements/1.1/creator>
+construct
+?x <http://purl.org/dc/terms/creator> ?y

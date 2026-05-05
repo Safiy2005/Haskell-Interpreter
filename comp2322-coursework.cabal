@@ -13,6 +13,7 @@ author:         jb5g24, sh6n24, ssa1g24
 maintainer:     jb5g24, sh6n24, ssa1g24
 copyright:      University of Southampton 2026
 license:        BSD-3-Clause
+license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
