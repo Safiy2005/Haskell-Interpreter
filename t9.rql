@@ -1,9 +1,6 @@
-from foo
+from foo as f
 match
-?x <http://www.w3.org/2002/07/owl#sameAs> ?y,
-?a <http://www.w3.org/2002/07/owl#sameAs> ?b
-where
-?b = ?y or ?a = ?y
+f: ?x <http://www.w3.org/2002/07/owl#sameAs> ?y,
+f: ?z <http://www.w3.org/2002/07/owl#sameAs> ?y
 construct
-?x <http://www.w3.org/2002/07/owl#sameAs> ?a,
-?x <http://www.w3.org/2002/07/owl#sameAs> ?b
+?x <http://www.w3.org/2002/07/owl#sameAs> ?z
